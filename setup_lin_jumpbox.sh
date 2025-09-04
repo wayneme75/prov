@@ -67,3 +67,44 @@ fi
 echo "Verifying net-tools installation..."
 ifconfig || echo "ifconfig not available."
 echo "==== Provisioning complete on $(date) ===="
+
+# ==== Final Success Check ====
+echo
+echo "==== Verifying all installations ===="
+
+# Azure CLI
+if command -v az &>/dev/null; then
+    echo "✅ Azure CLI installed: $(az version | head -n 1)"
+else
+    echo "❌ Azure CLI NOT installed"
+fi
+
+# Go
+if command -v go &>/dev/null; then
+    echo "✅ Go installed: $(go version)"
+else
+    echo "❌ Go NOT installed"
+fi
+
+# Make
+if command -v make &>/dev/null; then
+    echo "✅ Make installed: $(make --version | head -n 1)"
+else
+    echo "❌ Make NOT installed"
+fi
+
+# kubectl
+if command -v kubectl &>/dev/null; then
+    echo "✅ kubectl installed: $(kubectl version --client --short)"
+else
+    echo "❌ kubectl NOT installed"
+fi
+
+# Net-tools
+if command -v ifconfig &>/dev/null; then
+    echo "✅ net-tools installed"
+else
+    echo "❌ net-tools NOT installed"
+fi
+
+echo "==== Provisioning SUCCESSFUL on $(date) ===="
