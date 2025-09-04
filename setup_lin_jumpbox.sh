@@ -62,10 +62,25 @@ make --version
 # -----------------------------
 echo "Installing kubectl..."
 
-# Get stable version
-sudo apt-get install -y kubectl
-kubectl version --client
+# Update system packages
+sudo apt-get update
 
+# Install dependencies for apt repo
+sudo apt-get install -y apt-transport-https ca-certificates curl
+
+# Download and install the GPG key
+sudo mkdir -p /etc/apt/keyrings
+curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.30/deb/Release.key | \
+  sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+
+# Add Kubernetes APT repo
+echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] \
+https://pkgs.k8s.io/core:/stable:/v1.30/deb/ /" | \
+  sudo tee /etc/apt/sources.list.d/kubernetes.list
+
+# Update again and install kubectl
+sudo apt-get update
+sudo apt-get install -y kubectl
 
 # -----------------------------
 # Verify net-tools
