@@ -47,7 +47,7 @@ make --version
 
 # Install kubectl
 echo "Installing kubectl..."
-sudo curl -L -o kubectl "https://dl.k8s.io/release/$(curl -sL https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+sudo sh -c curl -sL -o kubectl "https://dl.k8s.io/release/$(curl -sL https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
 sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl 
 kubectl version --client
 
