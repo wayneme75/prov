@@ -1,4 +1,6 @@
 #!/bin/bash
+# Prep Ubuntu box with AzCli, Kubectl and NetTools
+
 set -euo pipefail 
 
 LOGFILE="$HOME/provision.log"
