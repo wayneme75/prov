@@ -1,4 +1,3 @@
-#Prep Ubuntu box with AzCli, Kubectl and NetTools
 #!/bin/bash
 set -euo pipefail 
 
