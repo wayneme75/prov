@@ -81,7 +81,7 @@ echo "==== Verifying all installations ===="
 
 # Azure CLI
 if command -v az &>/dev/null; then
-    echo "✅ Azure CLI installed: $(az version | head -n1)"
+    echo "✅ Azure CLI installed: $(az version --query '["azure-cli"]' -o tsv)"
 else
     echo "❌ Azure CLI NOT installed"
 fi
@@ -102,7 +102,7 @@ fi
 
 # kubectl
 if command -v kubectl &>/dev/null; then
-    echo "✅ kubectl installed: $(kubectl version --client --short)"
+    echo "✅ kubectl installed: $(kubectl version --client | grep "Client Version" | awk '{print $3}')"
 else
     echo "❌ kubectl NOT installed"
 fi
