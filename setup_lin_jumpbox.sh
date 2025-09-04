@@ -62,18 +62,18 @@ make --version
 # -----------------------------
 echo "Installing kubectl..."
 
-# Download kubectl version string first
-KUBECTL_VERSION=$(curl -sL https://dl.k8s.io/release/stable.txt)
+# Get stable version
+KUBECTL_VERSION=$(curl -sL https://dl.k8s.io/release/stable.txt | tr -d '\r\n')
 if [[ -z "$KUBECTL_VERSION" ]]; then
     echo "❌ Failed to get kubectl version. Exiting."
     exit 1
 fi
 
-# Download kubectl locally
+# Download kubectl
 curl -sL -o kubectl "https://dl.k8s.io/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl"
 chmod +x kubectl
 
-# Try installing to /usr/local/bin first
+# Install to /usr/local/bin if possible
 if sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl; then
     echo "✅ kubectl installed to /usr/local/bin"
 else
@@ -85,6 +85,7 @@ else
 fi
 
 kubectl version --client
+
 
 # -----------------------------
 # Verify net-tools
