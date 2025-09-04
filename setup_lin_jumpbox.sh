@@ -71,7 +71,7 @@ sudo apt-get install -y apt-transport-https ca-certificates curl
 # Download and install the GPG key
 sudo mkdir -p /etc/apt/keyrings
 curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.30/deb/Release.key | \
-  sudo gpg --dearmor --yes -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+  sudo gpg --dearmor --yes --batch -output /etc/apt/keyrings/kubernetes-apt-keyring.gpg
 
 # Add Kubernetes APT repo
 echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] \
