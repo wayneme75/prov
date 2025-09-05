@@ -84,6 +84,11 @@ sudo apt-get update
 sudo apt-get install -y kubectl
 
 # -----------------------------
+# Install Kubelogin
+# -----------------------------
+sudo snap install kubelogin
+
+# -----------------------------
 # Verify net-tools
 # -----------------------------
 echo "Verifying net-tools installation..."
@@ -114,6 +119,13 @@ if command -v make &>/dev/null; then
     echo "✅ Make installed: $(make --version | head -n1)"
 else
     echo "❌ Make NOT installed"
+fi
+
+# kubectl
+if command -v kubectl &>/dev/null; then
+    echo "✅ kubectl installed: $(kubectl version --client | grep "Client Version" | awk '{print $3}')"
+else
+    echo "❌ kubectl NOT installed"
 fi
 
 # kubectl
