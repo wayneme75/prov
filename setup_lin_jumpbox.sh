@@ -117,10 +117,10 @@ else
 fi
 
 # kubectl
-if command -v kubectl &>/dev/null; then
-    echo "✅ kubectl installed: $(kubectl version --client | grep "Client Version" | awk '{print $3}')"
+if command -v kubelogin &>/dev/null; then
+    echo "✅ kubelogin installed (git hash): $(kubelogin --version | grep "git hash" | awk '{print $3}')"
 else
-    echo "❌ kubectl NOT installed"
+    echo "❌ kubelogin NOT installed"
 fi
 
 # Net-tools
