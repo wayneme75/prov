@@ -84,8 +84,10 @@ sudo apt-get update
 sudo apt-get install -y kubectl
 
 # -----------------------------
-# Install Kubelogin (alternative method)
+# Install Kubelogin
 # -----------------------------
+echo "Installing kubelogin..."
+# Download the latest release of kubelogin
 curl -sL https://github.com/Azure/kubelogin/releases/latest/download/kubelogin-linux-amd64.zip -o /tmp/kubelogin.zip && \
 sudo apt install -y unzip && \
 unzip -o /tmp/kubelogin.zip -d /tmp && \
@@ -93,6 +95,33 @@ sudo mv /tmp/bin/linux_amd64/kubelogin /usr/local/bin/ && \
 sudo chmod +x /usr/local/bin/kubelogin && \
 rm -rf /tmp/kubelogin.zip /tmp/bin && \
 kubelogin --version
+
+# -----------------------------
+# Install Helm
+# -----------------------------
+echo "Installing Helm..."
+
+# Update system packages
+sudo apt-get update
+
+# Install dependencies
+sudo apt-get install -y curl apt-transport-https gnupg
+
+# Add Helm’s GPG key
+curl https://baltocdn.com/helm/signing.asc | sudo gpg --dearmor -o /usr/share/keyrings/helm.gpg
+
+# Add the Helm apt repository
+echo "deb [signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" \
+  | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
+
+# Update package list again
+sudo apt-get update
+
+# Install Helm
+sudo apt-get install -y helm
+
+# Verify
+helm version
 
 
 # -----------------------------
