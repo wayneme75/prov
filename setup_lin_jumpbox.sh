@@ -99,29 +99,26 @@ kubelogin --version
 # -----------------------------
 # Install Helm
 # -----------------------------
-echo "Installing Helm..."
-
-# Update system packages
+# Update package list
 sudo apt-get update
 
 # Install dependencies
-sudo apt-get install -y curl apt-transport-https gnupg
+sudo apt-get install -y curl apt-transport-https
 
-# Add Helm’s GPG key
-curl https://baltocdn.com/helm/signing.asc | sudo gpg --dearmor -o /usr/share/keyrings/helm.gpg
+# Download Helm GPG key
+curl -fsSL https://baltocdn.com/helm/signing.asc | sudo tee /usr/share/keyrings/helm.gpg > /dev/null
 
-# Add the Helm apt repository
+# Add Helm APT repository
 echo "deb [signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" \
   | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
 
-# Update package list again
+# Update and install Helm
 sudo apt-get update
-
-# Install Helm
 sudo apt-get install -y helm
 
-# Verify
+# Verify install
 helm version
+
 
 
 # -----------------------------
