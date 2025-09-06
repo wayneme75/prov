@@ -101,7 +101,7 @@ kubelogin --version
 # -----------------------------
 echo "Installing Helm..."
 
-curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+ curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
 
 # Verify
 helm version
@@ -147,11 +147,18 @@ else
     echo "❌ kubectl NOT installed"
 fi
 
-# kubectl
+# kubelogin
 if command -v kubelogin &>/dev/null; then
     echo "✅ kubelogin installed (git hash): $(kubelogin --version | grep "git hash" | awk '{print $3}')"
 else
     echo "❌ kubelogin NOT installed"
+fi
+
+# helm
+if command -v helm &>/dev/null; then
+    echo "✅ helm installed (git hash): $(helm version --short)"
+else
+    echo "❌ helm NOT installed"
 fi
 
 # Net-tools
