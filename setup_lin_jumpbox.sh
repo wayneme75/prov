@@ -84,9 +84,16 @@ sudo apt-get update
 sudo apt-get install -y kubectl
 
 # -----------------------------
-# Install Kubelogin
+# Install Kubelogin (alternative method)
 # -----------------------------
-sudo snap install kubelogin
+curl -sL https://github.com/Azure/kubelogin/releases/latest/download/kubelogin-linux-amd64.zip -o /tmp/kubelogin.zip && \
+sudo apt install -y unzip && \
+unzip -o /tmp/kubelogin.zip -d /tmp && \
+sudo mv /tmp/bin/linux_amd64/kubelogin /usr/local/bin/ && \
+sudo chmod +x /usr/local/bin/kubelogin && \
+rm -rf /tmp/kubelogin.zip /tmp/bin && \
+kubelogin --version
+
 
 # -----------------------------
 # Verify net-tools
