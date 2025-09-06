@@ -156,7 +156,7 @@ fi
 
 # helm
 if command -v helm &>/dev/null; then
-    echo "✅ helm installed (git hash): $(helm version --short)"
+    echo "✅ helm installed: $(helm version --short)"
 else
     echo "❌ helm NOT installed"
 fi
