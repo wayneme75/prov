@@ -1,7 +1,7 @@
 # Image to use for Splunk pod containers
 # Overrides RELATED_IMAGE_SPLUNK_ENTERPRISE environment variable in Splunk Operator manager container
 image:
-  repository: gamma2acr.azurecr.us/splunk:v9.4.3 #docker.io/splunk/splunk:9.4.3
+  repository: docker.io/splunk/splunk:9.4.3 #gamma2acr.azurecr.us/splunk:v9.4.3
   pullPolicy: IfNotPresent
   imagePullSecrets: []
 
