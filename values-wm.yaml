@@ -148,6 +148,10 @@ clusterManager:
       readOnly: true
       volumeAttributes:
         secretProviderClass: "azure-kv-spc"
+  volumeMounts:
+  - name: secrets-store
+    mountPath: "/mnt/secrets-store"
+    readOnly: true
 
   # Full path or URL for a Splunk Enterprise license file
   # Ignore if deploying a license manager instance
