@@ -801,7 +801,7 @@ standalone:
     limits:
       memory: "12Gi"
       cpu: "24"
-  serviceAccount: ""
+  serviceAccount: "splunk-operator-controller-manager"
   # ServiceTemplate is a template used to create Kubernetes services
   serviceTemplate: {}
   tolerations: []
