@@ -282,7 +282,17 @@ indexerCluster:
     azure.workload.identity/use: "true"
   additionalAnnotations: {}
   replicaCount: 3
-  volumes: []
+  volumes:
+  - name: secrets-store
+    csi:
+      driver: secrets-store.csi.k8s.io
+      readOnly: true
+      volumeAttributes:
+        secretProviderClass: "azure-kv-spc"
+  extraVolumeMounts:
+  - name: secrets-store
+    mountPath: "/mnt/secrets-store"
+    readOnly: true
   licenseUrl: /mnt/licenses/enterprise.lic
   defaultsUrl: ""
   defaults: {}
@@ -387,7 +397,17 @@ searchHeadCluster:
     #     region:
     #     secretRef:
 
-  volumes: []
+  volumes:
+  - name: secrets-store
+    csi:
+      driver: secrets-store.csi.k8s.io
+      readOnly: true
+      volumeAttributes:
+        secretProviderClass: "azure-kv-spc"
+  extraVolumeMounts:
+  - name: secrets-store
+    mountPath: "/mnt/secrets-store"
+    readOnly: true
   licenseUrl: /mnt/licenses/enterprise.lic
   defaultsUrl: ""
   defaults: {}
@@ -472,7 +492,17 @@ monitoringConsole:
     #     region:
     #     secretRef:
 
-  volumes: []
+  volumes:
+  - name: secrets-store
+    csi:
+      driver: secrets-store.csi.k8s.io
+      readOnly: true
+      volumeAttributes:
+        secretProviderClass: "azure-kv-spc"
+  extraVolumeMounts:
+  - name: secrets-store
+    mountPath: "/mnt/secrets-store"
+    readOnly: true
   licenseUrl: /mnt/licenses/enterprise.lic
   defaultsUrl: ""
   defaults: {}
@@ -684,7 +714,17 @@ standalone:
     #     path:
     #     endpoint:
     #     secretRef:
-  volumes: []
+  volumes:
+  - name: secrets-store
+    csi:
+      driver: secrets-store.csi.k8s.io
+      readOnly: true
+      volumeAttributes:
+        secretProviderClass: "azure-kv-spc"
+  extraVolumeMounts:
+  - name: secrets-store
+    mountPath: "/mnt/secrets-store"
+    readOnly: true
   licenseUrl: /mnt/licenses/enterprise.lic
   defaultsUrl: ""
   defaults: {}
