@@ -142,15 +142,15 @@ clusterManager:
   # List volumes to be mounted in all pod containers
   # reference: https://kubernetes.io/docs/concepts/storage/volumes/
   volumes:
-  - name: secrets-store
+  - name: kv-secrets
     csi:
-      driver: secrets-store.csi.k8s.io
+      driver: kv-secrets.csi.k8s.io
       readOnly: true
       volumeAttributes:
         secretProviderClass: "azure-kv-spc"
   extraVolumeMounts:
-  - name: secrets-store
-    mountPath: "/mnt/secrets-store"
+  - name: kv-secrets
+    mountPath: "/mnt/kv-secrets"
     readOnly: true
 
   # Full path or URL for a Splunk Enterprise license file
@@ -179,9 +179,11 @@ clusterManager:
   defaultsUrlApps: ""
 
   # List additional environment variables to passed to the Splunk instance container
-  extraEnv: []
-  # - name:
-  #   value:
+  extraEnv:
+  - name: SPLUNK_BLOB_STORE_NAME
+    value: /mnt/kv-secrets/azure-storage-account-name
+  - name: SPLUNK_BLOB_STORE_KEY
+    value: /mnt/kv-secrets/azure-storage-account-key
 
   # Delay in seconds before probing liveness
   # refernece: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-a-liveness-command
@@ -283,20 +285,24 @@ indexerCluster:
   additionalAnnotations: {}
   replicaCount: 3
   volumes:
-  - name: secrets-store
+  - name: kv-secrets
     csi:
-      driver: secrets-store.csi.k8s.io
+      driver: kv-secrets.csi.k8s.io
       readOnly: true
       volumeAttributes:
         secretProviderClass: "azure-kv-spc"
   extraVolumeMounts:
-  - name: secrets-store
-    mountPath: "/mnt/secrets-store"
+  - name: kv-secrets
+    mountPath: "/mnt/kv-secrets"
     readOnly: true
   licenseUrl: /mnt/licenses/enterprise.lic
   defaultsUrl: ""
   defaults: {}
-  extraEnv: []
+  extraEnv:
+  - name: SPLUNK_BLOB_STORE_NAME
+    value: /mnt/kv-secrets/azure-storage-account-name
+  - name: SPLUNK_BLOB_STORE_KEY
+    value: /mnt/kv-secrets/azure-storage-account-key
   # - name:
   #   value:
   livenessInitialDelaySeconds: 300
@@ -398,21 +404,25 @@ searchHeadCluster:
     #     secretRef:
 
   volumes:
-  - name: secrets-store
+  - name: kv-secrets
     csi:
-      driver: secrets-store.csi.k8s.io
+      driver: kv-secrets.csi.k8s.io
       readOnly: true
       volumeAttributes:
         secretProviderClass: "azure-kv-spc"
   extraVolumeMounts:
-  - name: secrets-store
-    mountPath: "/mnt/secrets-store"
+  - name: kv-secrets
+    mountPath: "/mnt/kv-secrets"
     readOnly: true
   licenseUrl: /mnt/licenses/enterprise.lic
   defaultsUrl: ""
   defaults: {}
   defaultsUrlApps: ""
-  extraEnv: []
+  extraEnv: 
+  - name: SPLUNK_BLOB_STORE_NAME
+    value: /mnt/kv-secrets/azure-storage-account-name
+  - name: SPLUNK_BLOB_STORE_KEY
+    value: /mnt/kv-secrets/azure-storage-account-key
   # - name:
   #   value:
   livenessInitialDelaySeconds: 300
@@ -493,21 +503,25 @@ monitoringConsole:
     #     secretRef:
 
   volumes:
-  - name: secrets-store
+  - name: kv-secrets
     csi:
-      driver: secrets-store.csi.k8s.io
+      driver: kv-secrets.csi.k8s.io
       readOnly: true
       volumeAttributes:
         secretProviderClass: "azure-kv-spc"
   extraVolumeMounts:
-  - name: secrets-store
-    mountPath: "/mnt/secrets-store"
+  - name: kv-secrets
+    mountPath: "/mnt/kv-secrets"
     readOnly: true
   licenseUrl: /mnt/licenses/enterprise.lic
   defaultsUrl: ""
   defaults: {}
   defaultsUrlApps: ""
-  extraEnv: []
+  extraEnv:
+  - name: SPLUNK_BLOB_STORE_NAME
+    value: /mnt/kv-secrets/azure-storage-account-name
+  - name: SPLUNK_BLOB_STORE_KEY
+    value: /mnt/kv-secrets/azure-storage-account-key
   # - name:
   #   value:
   livenessInitialDelaySeconds: 300
@@ -602,9 +616,9 @@ licenseManager:
   - name: licenses
     configMap:
       name: splunk-licenses
-  - name: secrets-store
+  - name: kv-secrets
     csi:
-      driver: secrets-store.csi.k8s.io
+      driver: kv-secrets.csi.k8s.io
       readOnly: true
       volumeAttributes:
         secretProviderClass: "azure-kv-spc"
@@ -612,8 +626,8 @@ licenseManager:
   licenseUrl: /mnt/licenses/enterprise.lic
 
   extraVolumeMounts:
-  - name: secrets-store
-    mountPath: "/mnt/secrets-store"
+  - name: kv-secrets
+    mountPath: "/mnt/kv-secrets"
     readOnly: true
   ## Example: using mounted volume to specify license file path
   # licenseUrl: /mnt/licenses/enterprise.lic
@@ -624,7 +638,11 @@ licenseManager:
   
   defaultsUrlApps: ""
   
-  extraEnv: []
+  extraEnv:
+  - name: SPLUNK_BLOB_STORE_NAME
+    value: /mnt/kv-secrets/azure-storage-account-name
+  - name: SPLUNK_BLOB_STORE_KEY
+    value: /mnt/kv-secrets/azure-storage-account-key
   # - name:
   #   value:
   
@@ -727,21 +745,26 @@ standalone:
     #     endpoint:
     #     secretRef:
   volumes:
-  - name: secrets-store
+  - name: kv-secrets
     csi:
-      driver: secrets-store.csi.k8s.io
+      driver: kv-secrets.csi.k8s.io
       readOnly: true
       volumeAttributes:
         secretProviderClass: "azure-kv-spc"
   extraVolumeMounts:
-  - name: secrets-store
-    mountPath: "/mnt/secrets-store"
+  - name: kv-secrets
+    mountPath: "/mnt/kv-secrets"
     readOnly: true
+  
   licenseUrl: /mnt/licenses/enterprise.lic
   defaultsUrl: ""
   defaults: {}
   defaultsUrlApps: ""
-  extraEnv: []
+  extraEnv:
+  - name: SPLUNK_BLOB_STORE_NAME
+    value: /mnt/kv-secrets/azure-storage-account-name
+  - name: SPLUNK_BLOB_STORE_KEY
+    value: /mnt/kv-secrets/azure-storage-account-key
   # - name:
   #   value:
   livenessInitialDelaySeconds: 300
