@@ -602,7 +602,19 @@ licenseManager:
   - name: licenses
     configMap:
       name: splunk-licenses
+  - name: secrets-store
+    csi:
+      driver: secrets-store.csi.k8s.io
+      readOnly: true
+      volumeAttributes:
+        secretProviderClass: "azure-kv-spc"
+  
   licenseUrl: /mnt/licenses/enterprise.lic
+
+  extraVolumeMounts:
+  - name: secrets-store
+    mountPath: "/mnt/secrets-store"
+    readOnly: true
   ## Example: using mounted volume to specify license file path
   # licenseUrl: /mnt/licenses/enterprise.lic
   
