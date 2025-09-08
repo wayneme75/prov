@@ -546,11 +546,11 @@ monitoringConsole:
   etcVolumeStorageConfig:
     ephemeralStorage: false
     storageCapacity: 10Gi
-    storageClassName: managed-premium
+    storageClassName: azurefile-premium
   varVolumeStorageConfig:
     ephemeralStorage: false
     storageCapacity: 100Gi
-    storageClassName: managed-premium
+    storageClassName: azurefile-premium
   resources:
     requests:
       memory: "2Gi"
