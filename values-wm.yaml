@@ -148,7 +148,7 @@ clusterManager:
       readOnly: true
       volumeAttributes:
         secretProviderClass: "azure-kv-spc"
-  volumeMounts:
+  extraVolumeMounts:
   - name: secrets-store
     mountPath: "/mnt/secrets-store"
     readOnly: true
