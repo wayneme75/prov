@@ -144,7 +144,7 @@ clusterManager:
   volumes:
   - name: kv-secrets
     csi:
-      driver: kv-secrets.csi.k8s.io
+      driver: secrets-store.csi.k8s.io
       readOnly: true
       volumeAttributes:
         secretProviderClass: "azure-kv-spc"
@@ -287,7 +287,7 @@ indexerCluster:
   volumes:
   - name: kv-secrets
     csi:
-      driver: kv-secrets.csi.k8s.io
+      driver: secrets-store.csi.k8s.io
       readOnly: true
       volumeAttributes:
         secretProviderClass: "azure-kv-spc"
@@ -406,7 +406,7 @@ searchHeadCluster:
   volumes:
   - name: kv-secrets
     csi:
-      driver: kv-secrets.csi.k8s.io
+      driver: secrets-store.csi.k8s.io
       readOnly: true
       volumeAttributes:
         secretProviderClass: "azure-kv-spc"
@@ -505,7 +505,7 @@ monitoringConsole:
   volumes:
   - name: kv-secrets
     csi:
-      driver: kv-secrets.csi.k8s.io
+      driver: secrets-store.csi.k8s.io
       readOnly: true
       volumeAttributes:
         secretProviderClass: "azure-kv-spc"
@@ -618,7 +618,7 @@ licenseManager:
       name: splunk-licenses
   - name: kv-secrets
     csi:
-      driver: kv-secrets.csi.k8s.io
+      driver: secrets-store.csi.k8s.io
       readOnly: true
       volumeAttributes:
         secretProviderClass: "azure-kv-spc"
@@ -747,7 +747,7 @@ standalone:
   volumes:
   - name: kv-secrets
     csi:
-      driver: kv-secrets.csi.k8s.io
+      driver: secrets-store.csi.k8s.io
       readOnly: true
       volumeAttributes:
         secretProviderClass: "azure-kv-spc"
