@@ -141,13 +141,13 @@ clusterManager:
 
   # List volumes to be mounted in all pod containers
   # reference: https://kubernetes.io/docs/concepts/storage/volumes/
-  volumes: []
-  # - name: mnt-splunk-secrets
-  #    csi:
-  #      driver: secrets-store.csi.k8s.io
-  #      readOnly: true
-  #      volumeAttributes:
-  #        secretProviderClass: "splunk-secrets"
+  volumes:
+  - name: secrets-store
+    csi:
+      driver: secrets-store.csi.k8s.io
+      readOnly: true
+      volumeAttributes:
+        secretProviderClass: "azure-kv-spc"
 
   # Full path or URL for a Splunk Enterprise license file
   # Ignore if deploying a license manager instance
