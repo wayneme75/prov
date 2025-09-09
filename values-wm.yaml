@@ -180,9 +180,9 @@ clusterManager:
 
   # List additional environment variables to passed to the Splunk instance container
   extraEnv:
-  - name: SPLUNK_BLOB_STORE_NAME
+  - name: azure_sa_name
     value: /mnt/kv-secrets/azure-storage-account-name
-  - name: SPLUNK_BLOB_STORE_KEY
+  - name: azure_sa_secret_key
     value: /mnt/kv-secrets/azure-storage-account-key
 
   # Delay in seconds before probing liveness
@@ -299,9 +299,9 @@ indexerCluster:
   defaultsUrl: ""
   defaults: {}
   extraEnv:
-  - name: SPLUNK_BLOB_STORE_NAME
+  - name: azure_sa_name
     value: /mnt/kv-secrets/azure-storage-account-name
-  - name: SPLUNK_BLOB_STORE_KEY
+  - name: azure_sa_secret_key
     value: /mnt/kv-secrets/azure-storage-account-key
   # - name:
   #   value:
@@ -419,9 +419,9 @@ searchHeadCluster:
   defaults: {}
   defaultsUrlApps: ""
   extraEnv: 
-  - name: SPLUNK_BLOB_STORE_NAME
+  - name: azure_sa_name
     value: /mnt/kv-secrets/azure-storage-account-name
-  - name: SPLUNK_BLOB_STORE_KEY
+  - name: azure_sa_secret_key
     value: /mnt/kv-secrets/azure-storage-account-key
   # - name:
   #   value:
@@ -518,9 +518,9 @@ monitoringConsole:
   defaults: {}
   defaultsUrlApps: ""
   extraEnv:
-  - name: SPLUNK_BLOB_STORE_NAME
+  - name: azure_sa_name
     value: /mnt/kv-secrets/azure-storage-account-name
-  - name: SPLUNK_BLOB_STORE_KEY
+  - name: azure_sa_secret_key
     value: /mnt/kv-secrets/azure-storage-account-key
   # - name:
   #   value:
@@ -639,9 +639,9 @@ licenseManager:
   defaultsUrlApps: ""
   
   extraEnv:
-  - name: SPLUNK_BLOB_STORE_NAME
+  - name: azure_sa_name
     value: /mnt/kv-secrets/azure-storage-account-name
-  - name: SPLUNK_BLOB_STORE_KEY
+  - name: azure_sa_secret_key
     value: /mnt/kv-secrets/azure-storage-account-key
   # - name:
   #   value:
@@ -761,9 +761,9 @@ standalone:
   defaults: {}
   defaultsUrlApps: ""
   extraEnv:
-  - name: SPLUNK_BLOB_STORE_NAME
+  - name: azure_sa_name
     value: /mnt/kv-secrets/azure-storage-account-name
-  - name: SPLUNK_BLOB_STORE_KEY
+  - name: azure_sa_secret_key
     value: /mnt/kv-secrets/azure-storage-account-key
   # - name:
   #   value:
