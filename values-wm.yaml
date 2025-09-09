@@ -95,7 +95,8 @@ clusterManager:
   additionalLabels: 
     azure.workload.identity/use: "true"
 
-  additionalAnnotations: {}
+  additionalAnnotations:
+    azure.workload.identity/client-id: 680f024a-81e1-43f8-8012-62d9efd403ca
 
   # Splunk Enterprise App repository
   # Specifies remote App location and scope for Splunk App management
