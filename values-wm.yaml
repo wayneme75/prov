@@ -119,7 +119,6 @@ clusterManager:
         path: custom-apps/
         #endpoint: https://blobtestsa.blob.core.usgovcloudapi.net
         endpoint: https://dumpster.blob.core.usgovcloudapi.net
-        authenticationType: msi
 
   # Splunk Smartstore configuration
   # reference: https://github.com/splunk/splunk-operator/blob/develop/docs/SmartStore.md
@@ -242,7 +241,7 @@ clusterManager:
   # Specify a service account used by the Splunk instance pods
   # Default uses the Default Service Account to access the API server
   # reference: https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/
-  serviceAccount: ""
+  serviceAccount: "splunk-operator-controller-manager"
 
   # ServiceTemplate is a template used to create Kubernetes services
   serviceTemplate: {}
@@ -347,7 +346,7 @@ indexerCluster:
       memory: "12Gi"
       cpu: "24"
 
-  serviceAccount: ""
+  serviceAccount: "splunk-operator-controller-manager"
 
   # ServiceTemplate is a template used to create Kubernetes services
   serviceTemplate: {}
@@ -461,7 +460,7 @@ searchHeadCluster:
     limits:
       memory: "12Gi"
       cpu: "24"
-  serviceAccount: ""
+  serviceAccount: "splunk-operator-controller-manager"
   # ServiceTemplate is a template used to create Kubernetes services
   serviceTemplate: {}
   tolerations: []
@@ -560,7 +559,7 @@ monitoringConsole:
     limits:
       memory: "12Gi"
       cpu: "24"
-  serviceAccount: ""
+  serviceAccount: "splunk-operator-controller-manager"
   # ServiceTemplate is a template used to create Kubernetes services
   serviceTemplate: {}
   tolerations: []
@@ -688,7 +687,7 @@ licenseManager:
       memory: "12Gi"
       cpu: "24"
   
-  serviceAccount: ""
+  serviceAccount: "splunk-operator-controller-manager"
   
   # ServiceTemplate is a template used to create Kubernetes services
   
