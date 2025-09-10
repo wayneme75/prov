@@ -119,6 +119,7 @@ clusterManager:
         path: custom-apps/
         #endpoint: https://blobtestsa.blob.core.usgovcloudapi.net
         endpoint: https://dumpster.blob.core.usgovcloudapi.net
+        authenticationType: msi
 
   # Splunk Smartstore configuration
   # reference: https://github.com/splunk/splunk-operator/blob/develop/docs/SmartStore.md
