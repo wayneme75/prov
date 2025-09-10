@@ -241,7 +241,7 @@ clusterManager:
   # Specify a service account used by the Splunk instance pods
   # Default uses the Default Service Account to access the API server
   # reference: https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/
-  serviceAccount: "splunk-operator-controller-manager"
+  serviceAccount: "splunk-svc-acct"
 
   # ServiceTemplate is a template used to create Kubernetes services
   serviceTemplate: {}
@@ -346,7 +346,7 @@ indexerCluster:
       memory: "12Gi"
       cpu: "24"
 
-  serviceAccount: "splunk-operator-controller-manager"
+  serviceAccount: "splunk-svc-acct"
 
   # ServiceTemplate is a template used to create Kubernetes services
   serviceTemplate: {}
@@ -460,7 +460,7 @@ searchHeadCluster:
     limits:
       memory: "12Gi"
       cpu: "24"
-  serviceAccount: "splunk-operator-controller-manager"
+  serviceAccount: "splunk-svc-acct"
   # ServiceTemplate is a template used to create Kubernetes services
   serviceTemplate: {}
   tolerations: []
@@ -559,7 +559,7 @@ monitoringConsole:
     limits:
       memory: "12Gi"
       cpu: "24"
-  serviceAccount: "splunk-operator-controller-manager"
+  serviceAccount: "splunk-svc-acct"
   # ServiceTemplate is a template used to create Kubernetes services
   serviceTemplate: {}
   tolerations: []
@@ -687,7 +687,7 @@ licenseManager:
       memory: "12Gi"
       cpu: "24"
   
-  serviceAccount: "splunk-operator-controller-manager"
+  serviceAccount: "splunk-svc-acct"
   
   # ServiceTemplate is a template used to create Kubernetes services
   
@@ -802,7 +802,7 @@ standalone:
     limits:
       memory: "12Gi"
       cpu: "24"
-  serviceAccount: "splunk-operator-controller-manager"
+  serviceAccount: "splunk-svc-acct"
   # ServiceTemplate is a template used to create Kubernetes services
   serviceTemplate: {}
   tolerations: []
