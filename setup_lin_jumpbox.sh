@@ -1,5 +1,5 @@
 #!/bin/bash
-# Prep Ubuntu box with AzCli, Kubectl, Go, Make, and NetTools
+# Prep Ubuntu box with AzCli, Kubectl, Kubelogin, Go, Make, GH Cli and NetTools
 # Works when downloaded from GitHub and run as: curl -sLO <url> && bash <script>
 
 set -euo pipefail
@@ -106,6 +106,12 @@ echo "Installing Helm..."
 # Verify
 helm version
 
+# Update again and install GH CLI
+echo "Installing GitHub CLI..."
+sudo apt-get update
+sudo apt-get install -y gh
+
+gh --version
 
 # -----------------------------
 # Verify net-tools
@@ -159,6 +165,13 @@ if command -v helm &>/dev/null; then
     echo "✅ helm installed: $(helm version --short)"
 else
     echo "❌ helm NOT installed"
+fi
+
+# GH CLI 
+if command -v gh &>/dev/null; then
+    echo "✅ GH CLI installed: $(gh --version | head -n1)"
+else
+    echo "❌ GH CLI NOT installed"
 fi
 
 # Net-tools
