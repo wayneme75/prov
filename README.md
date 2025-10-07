@@ -10,3 +10,4 @@ Provisioning scripts in public domain to pull from when configuring Ubuntu machi
 - Helm
 - Github CLI
 - Kubelogin
+- Azure CLI
