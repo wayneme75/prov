@@ -7,5 +7,6 @@ Provisioning scripts in public domain to pull from when configuring Ubuntu machi
 - Azure CLI
 - Kubectl
 - NetTools
+- Helm
 - Github CLI
 - Kubelogin
