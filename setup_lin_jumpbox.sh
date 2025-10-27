@@ -181,4 +181,23 @@ else
     echo "❌ net-tools NOT installed"
 fi
 
+# --- REBOOT ---
+while true; do
+  read -rp "Do you want to reboot now? (y/n): " REBOOT
+  # Convert to lowercase for comparison
+  REBOOT=${REBOOT,,}
+
+  if [[ "$REBOOT" == "y" ]]; then
+    echo "Rebooting..."
+    sudo reboot
+    break
+  elif [[ "$REBOOT" == "n" ]]; then
+    echo "Reboot canceled."
+    break
+  else
+    echo "Invalid input. Please enter 'y' or 'n'."
+  fi
+done
+
+
 echo "==== Provisioning SUCCESSFUL on $(date) ===="
