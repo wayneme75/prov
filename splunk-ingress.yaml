@@ -1,0 +1,86 @@
+# Comprehensive Ingress Configuration for Federated Search Setup
+# This configures:
+# 1. REMOTE SHC Management API (port 8089) - for federated search connectivity
+# 2. LOCAL SHC Web UI (port 8000) - for user access to search interface
+
+---
+# Service for REMOTE management API - Internal routing for federated search
+apiVersion: v1
+kind: Service
+metadata:
+  name: remote-mgmt
+  namespace: stos-auto
+  labels:
+    app: federated-search
+    component: remote-management
+spec:
+  type: ClusterIP
+  ports:
+  - port: 8089
+    targetPort: 8089
+    protocol: TCP
+    name: management
+  selector:
+    app.kubernetes.io/instance: splunk-remote-shc-search-head
+
+---
+# Ingress for REMOTE Management API (8089) - Used by LOCAL SHC for federated search
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: remote-mgmt-ingress
+  namespace: stos-auto
+  annotations:
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+    nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    # Increase timeouts for long-running searches
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "300"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "300"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "300"
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: remote-api.stos-auto.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: remote-mgmt
+            port:
+              number: 8089
+
+---
+# Ingress for LOCAL Web UI (8000) - User-facing Splunk Web interface
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: local-webui-ingress
+  namespace: stos-auto
+  annotations:
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+    nginx.ingress.kubernetes.io/ssl-passthrough: "false"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    # Required for Splunk Web UI
+    nginx.ingress.kubernetes.io/affinity: "cookie"
+    nginx.ingress.kubernetes.io/session-cookie-name: "splunk-session"
+    nginx.ingress.kubernetes.io/session-cookie-hash: "sha1"
+    # Increase body size for app uploads
+    nginx.ingress.kubernetes.io/proxy-body-size: "100m"
+    # WebSocket support for real-time updates
+    nginx.ingress.kubernetes.io/websocket-services: "splunk-local-shc-search-head-service"
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: local-splunk.stos-auto.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: splunk-local-shc-search-head-service
+            port:
+              number: 8000
