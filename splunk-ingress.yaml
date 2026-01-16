@@ -1,86 +1,102 @@
-# Comprehensive Ingress Configuration for Federated Search Setup
-# This configures:
-# 1. REMOTE SHC Management API (port 8089) - for federated search connectivity
-# 2. LOCAL SHC Web UI (port 8000) - for user access to search interface
-
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tcp-services
+  namespace: splunk
+data:
+  "8089": "splunk/splunk-federation:8089"
 ---
-# Service for REMOTE management API - Internal routing for federated search
+# Splunk LoadBalancer Service
 apiVersion: v1
 kind: Service
 metadata:
-  name: remote-mgmt
+  name: splunk-lb
   namespace: splunk
   labels:
-    app: federated-search
-    component: remote-management
+    azure.workload.identity/use: "true"
+  annotations:
+    service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+spec:
+  type: LoadBalancer
+  loadBalancerIP: 10.224.0.100
+  selector:
+    app.kubernetes.io/instance: splunk-sh-deployer
+    app.kubernetes.io/component: search-head
+    app.kubernetes.io/name: deployer
+    app.kubernetes.io/part-of: splunk-sh-search-head
+  ports:
+    - name: splunk-lb-port
+      protocol: TCP
+      port: 8089
+      targetPort: 8089
+---
+# Splunk Federation Service Cluster IP
+apiVersion: v1
+kind: Service
+metadata:
+  name: splunk-federation
+  namespace: splunk
 spec:
   type: ClusterIP
   ports:
   - port: 8089
     targetPort: 8089
-    protocol: TCP
-    name: management
   selector:
-    app.kubernetes.io/instance: splunk-remote-shc-search-head
-
+    app: splunk-federation
 ---
-# Ingress for REMOTE Management API (8089) - Used by LOCAL SHC for federated search
+# Web Service Cluster IP
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-app
+  namespace: splunk
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: 80
+  selector:
+    app: web-app
+---
+# Splunk Federation Ingress
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: remote-mgmt-ingress
+  name: splunk-federation-ingress
   namespace: splunk
   annotations:
     nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
     nginx.ingress.kubernetes.io/ssl-passthrough: "true"
-    nginx.ingress.kubernetes.io/ssl-redirect: "true"
-    # Increase timeouts for long-running searches
-    nginx.ingress.kubernetes.io/proxy-connect-timeout: "300"
-    nginx.ingress.kubernetes.io/proxy-send-timeout: "300"
-    nginx.ingress.kubernetes.io/proxy-read-timeout: "300"
 spec:
   ingressClassName: nginx
   rules:
-  - host: remote-api.stos-auto.local
+  - host: federation.splunk.local
     http:
       paths:
       - path: /
         pathType: Prefix
         backend:
           service:
-            name: remote-mgmt
+            name: splunk-federation
             port:
               number: 8089
-
 ---
-# Ingress for LOCAL Web UI (8000) - User-facing Splunk Web interface
+# Web App 
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: local-webui-ingress
+  name: web-ingress
   namespace: splunk
-  annotations:
-    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
-    nginx.ingress.kubernetes.io/ssl-passthrough: "false"
-    nginx.ingress.kubernetes.io/ssl-redirect: "true"
-    # Required for Splunk Web UI
-    nginx.ingress.kubernetes.io/affinity: "cookie"
-    nginx.ingress.kubernetes.io/session-cookie-name: "splunk-session"
-    nginx.ingress.kubernetes.io/session-cookie-hash: "sha1"
-    # Increase body size for app uploads
-    nginx.ingress.kubernetes.io/proxy-body-size: "100m"
-    # WebSocket support for real-time updates
-    nginx.ingress.kubernetes.io/websocket-services: "splunk-local-shc-search-head-service"
 spec:
   ingressClassName: nginx
   rules:
-  - host: local-splunk.stos-auto.local
+  - host: web.splunk.local
     http:
       paths:
       - path: /
         pathType: Prefix
         backend:
           service:
-            name: splunk-local-shc-search-head-service
+            name: web-app
             port:
-              number: 8000
+              number: 80
