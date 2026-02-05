@@ -1,5 +1,5 @@
 #Define the subscription where you want to register your machine as Arc device
-$Subscription = "(get-azcontext).subscription.id"
+$Subscription = (get-azcontext).subscription.id
 
 #Define the resource group where you want to register your machine as Arc device
 do {
@@ -11,7 +11,7 @@ do {
 $Region = "usgovvirginia"
 
 #Define the tenant you will use to register your machine as Arc device
-$Tenant = "(get-azcontext).tenant.id"
+$Tenant = (get-azcontext).tenant.id
 
 #Connect to your Azure account and Subscription
 Connect-AzAccount -SubscriptionId $Subscription -TenantId $Tenant -DeviceCode -environment "AzureUSGovernment"
