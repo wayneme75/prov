@@ -125,6 +125,9 @@ KUBELOGIN_VERSION="v0.1.3"
 # To get the checksum, download the file and run: sha256sum kubelogin-linux-amd64.zip
 KUBELOGIN_SHA256=""  # MUST be filled in before production use
 
+# Security policy: Set to "strict" to require checksum, "warn" to allow without checksum
+KUBELOGIN_SECURITY_MODE="${KUBELOGIN_SECURITY_MODE:-warn}"
+
 # Create secure temporary directory
 TEMP_DIR=$(mktemp -d /tmp/kubelogin.XXXXXX)
 
@@ -145,6 +148,20 @@ else
     echo "    For production use, obtain the SHA256 hash from:"
     echo "    https://github.com/Azure/kubelogin/releases/tag/${KUBELOGIN_VERSION}"
     echo "    and set KUBELOGIN_SHA256 variable"
+    
+    if [ "$KUBELOGIN_SECURITY_MODE" = "strict" ]; then
+        echo "❌ ERROR: Checksum verification is required in strict mode"
+        echo "    Set KUBELOGIN_SHA256 or change KUBELOGIN_SECURITY_MODE to 'warn'"
+        rm -rf "$TEMP_DIR"
+        exit 1
+    fi
+    
+    read -p "    Continue without checksum verification? (yes/no): " -r
+    if [[ ! $REPLY =~ ^[Yy][Ee][Ss]$ ]]; then
+        echo "Installation cancelled."
+        rm -rf "$TEMP_DIR"
+        exit 1
+    fi
 fi
 
 sudo apt install -y unzip

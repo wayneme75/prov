@@ -15,6 +15,9 @@ $outFile = Join-Path $driversDir "cp068800.exe"
 # To calculate locally after download: (Get-FileHash -Path <file> -Algorithm SHA256).Hash
 $expectedHash = ""  # MUST be filled in before enabling verification
 
+# Security policy: Set to "Strict" to require checksum, "Warn" to allow without checksum
+$securityMode = if ($env:HPE_SECURITY_MODE) { $env:HPE_SECURITY_MODE } else { "Warn" }
+
 Write-Host "Downloading driver from HPE..."
 Write-Host "URL: $url"
 
@@ -61,6 +64,20 @@ try {
         Write-Warning "    https://support.hpe.com/"
         Write-Warning "    Current file hash: $actualHash"
         Write-Warning "    Add this hash to `$expectedHash variable to enable verification"
+        
+        if ($securityMode -eq "Strict") {
+            Write-Error "❌ ERROR: Checksum verification is required in Strict mode"
+            Write-Error "    Set `$expectedHash or change HPE_SECURITY_MODE to 'Warn'"
+            Remove-Item $outFile -Force -ErrorAction SilentlyContinue
+            exit 1
+        }
+        
+        $response = Read-Host "    Continue without checksum verification? (yes/no)"
+        if ($response -ne "yes") {
+            Write-Host "Download cancelled."
+            Remove-Item $outFile -Force -ErrorAction SilentlyContinue
+            exit 1
+        }
     }
     
 } catch {

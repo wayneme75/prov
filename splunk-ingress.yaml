@@ -59,6 +59,19 @@ spec:
     app: web-app
 ---
 # Splunk Federation Ingress
+# 
+# Rate Limiting Configuration Guidelines:
+# - limit-rps: Maximum requests per second per IP address
+# - limit-burst-multiplier: Allows temporary bursts (limit-rps * multiplier)
+#
+# Recommended values based on use case:
+# - Low volume (< 50 logs/sec):     limit-rps: "50",  burst: "3"
+# - Medium volume (50-200 logs/sec): limit-rps: "200", burst: "5" (current)
+# - High volume (> 200 logs/sec):    limit-rps: "500", burst: "10"
+#
+# Calculate your needs: (peak logs/sec) * (safety factor 1.5-2.0) = limit-rps
+# Monitor nginx-ingress metrics to adjust values based on actual traffic patterns
+#
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -89,7 +102,21 @@ spec:
             port:
               number: 8089
 ---
-# Web App 
+# Web App Ingress
+#
+# Rate Limiting Configuration Guidelines:
+# - limit-rps: Maximum requests per second per IP address
+# - limit-burst-multiplier: Allows temporary bursts during page loads
+#
+# Recommended values based on concurrent users:
+# - Small (< 50 users):    limit-rps: "100", burst: "5"
+# - Medium (50-200 users): limit-rps: "200", burst: "5" (current)
+# - Large (> 200 users):   limit-rps: "500", burst: "10"
+#
+# Consider: Average page = 10-20 requests, user may open multiple tabs
+# Calculate: (concurrent users * 20 requests) / (page load time in seconds) = baseline
+# Add 50-100% safety margin for peaks
+#
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
