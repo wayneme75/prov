@@ -67,6 +67,12 @@ metadata:
   annotations:
     nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
     nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+    # Security: Limit request sizes to prevent DoS
+    nginx.ingress.kubernetes.io/proxy-body-size: "10m"
+    # Security: Add rate limiting
+    nginx.ingress.kubernetes.io/limit-rps: "100"
+    # Security: Enable HSTS
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
 spec:
   ingressClassName: nginx
   rules:
@@ -87,6 +93,19 @@ kind: Ingress
 metadata:
   name: web-ingress
   namespace: splunk
+  annotations:
+    # Security: Limit request sizes to prevent DoS
+    nginx.ingress.kubernetes.io/proxy-body-size: "10m"
+    # Security: Add rate limiting
+    nginx.ingress.kubernetes.io/limit-rps: "100"
+    # Security: Enable HSTS for HTTPS
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    # Security: Set security headers
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      more_set_headers "X-Frame-Options: DENY";
+      more_set_headers "X-Content-Type-Options: nosniff";
+      more_set_headers "X-XSS-Protection: 1; mode=block";
+      more_set_headers "Referrer-Policy: strict-origin-when-cross-origin";
 spec:
   ingressClassName: nginx
   rules:

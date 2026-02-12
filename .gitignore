@@ -1,0 +1,57 @@
+# Log files
+*.log
+provision.log
+
+# Temporary files
+*.tmp
+*.temp
+/tmp/
+temp/
+
+# Downloaded binaries and installers
+*.exe
+*.msi
+*.zip
+*.tar.gz
+*.deb
+*.rpm
+
+# Software directory (drivers, downloads, etc.)
+software/
+drivers/
+
+# Backup files
+*.bak
+*.backup
+*~
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Azure/Cloud credentials (should never be committed)
+.azure/
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+credentials
+config
+*.kubeconfig
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# PowerShell files
+*.ps1~
