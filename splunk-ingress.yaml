@@ -69,8 +69,10 @@ metadata:
     nginx.ingress.kubernetes.io/ssl-passthrough: "true"
     # Security: Limit request sizes to prevent DoS
     nginx.ingress.kubernetes.io/proxy-body-size: "10m"
-    # Security: Add rate limiting
-    nginx.ingress.kubernetes.io/limit-rps: "100"
+    # Security: Add rate limiting with burst capacity for log traffic spikes
+    # Adjust these values based on your expected traffic patterns
+    nginx.ingress.kubernetes.io/limit-rps: "200"
+    nginx.ingress.kubernetes.io/limit-burst-multiplier: "5"
     # Security: Enable HSTS
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
 spec:
@@ -96,8 +98,10 @@ metadata:
   annotations:
     # Security: Limit request sizes to prevent DoS
     nginx.ingress.kubernetes.io/proxy-body-size: "10m"
-    # Security: Add rate limiting
-    nginx.ingress.kubernetes.io/limit-rps: "100"
+    # Security: Add rate limiting with burst capacity for peak web traffic
+    # Adjust these values based on expected user load and usage patterns
+    nginx.ingress.kubernetes.io/limit-rps: "200"
+    nginx.ingress.kubernetes.io/limit-burst-multiplier: "5"
     # Security: Enable HSTS for HTTPS
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     # Security: Set security headers

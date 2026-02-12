@@ -121,7 +121,9 @@ echo "Installing kubelogin..."
 
 # Pin to specific version for security and reproducibility
 KUBELOGIN_VERSION="v0.1.3"
-KUBELOGIN_SHA256="d720c1de7f9b0f2b5e7e9a0c5e2e2e1a8f1e2e3e4e5e6e7e8e9e0e1e2e3e4e5"  # Update with actual checksum
+# IMPORTANT: Replace with actual SHA256 from https://github.com/Azure/kubelogin/releases/tag/v0.1.3
+# To get the checksum, download the file and run: sha256sum kubelogin-linux-amd64.zip
+KUBELOGIN_SHA256=""  # MUST be filled in before production use
 
 # Create secure temporary directory
 TEMP_DIR=$(mktemp -d /tmp/kubelogin.XXXXXX)
@@ -129,13 +131,21 @@ TEMP_DIR=$(mktemp -d /tmp/kubelogin.XXXXXX)
 # Download kubelogin with specific version
 curl -sL "https://github.com/Azure/kubelogin/releases/download/${KUBELOGIN_VERSION}/kubelogin-linux-amd64.zip" -o "${TEMP_DIR}/kubelogin.zip"
 
-# Note: Checksum verification requires the actual SHA256 hash from the release
-# Uncomment and update the hash above when a specific version is chosen
-# echo "${KUBELOGIN_SHA256}  ${TEMP_DIR}/kubelogin.zip" | sha256sum --check --status || {
-#     echo "❌ ERROR: Kubelogin checksum verification failed"
-#     rm -rf "$TEMP_DIR"
-#     exit 1
-# }
+# Verify checksum if provided
+if [ -n "$KUBELOGIN_SHA256" ]; then
+    echo "Verifying kubelogin checksum..."
+    echo "${KUBELOGIN_SHA256}  ${TEMP_DIR}/kubelogin.zip" | sha256sum --check --status || {
+        echo "❌ ERROR: Kubelogin checksum verification failed"
+        rm -rf "$TEMP_DIR"
+        exit 1
+    }
+    echo "✅ Kubelogin checksum verified"
+else
+    echo "⚠️  WARNING: Kubelogin checksum verification is DISABLED"
+    echo "    For production use, obtain the SHA256 hash from:"
+    echo "    https://github.com/Azure/kubelogin/releases/tag/${KUBELOGIN_VERSION}"
+    echo "    and set KUBELOGIN_SHA256 variable"
+fi
 
 sudo apt install -y unzip
 unzip -o "${TEMP_DIR}/kubelogin.zip" -d "${TEMP_DIR}"

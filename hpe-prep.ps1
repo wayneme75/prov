@@ -10,9 +10,10 @@ $url = "https://downloads.hpe.com/pub/softlib2/software1/sc-windows/p176556484/v
 $outFile = Join-Path $driversDir "cp068800.exe"
 
 # Expected SHA256 checksum for the driver
-# TODO: Update this with the actual checksum from HPE's website
-# You can find it at: https://support.hpe.com/
-$expectedHash = "REPLACE_WITH_ACTUAL_SHA256_HASH_FROM_HPE"
+# IMPORTANT: This MUST be obtained from HPE's official website before production use
+# Get the official checksum from: https://support.hpe.com/
+# To calculate locally after download: (Get-FileHash -Path <file> -Algorithm SHA256).Hash
+$expectedHash = ""  # MUST be filled in before enabling verification
 
 Write-Host "Downloading driver from HPE..."
 Write-Host "URL: $url"
@@ -43,20 +44,24 @@ try {
     $actualHash = (Get-FileHash -Path $outFile -Algorithm SHA256).Hash
     Write-Host "Calculated hash: $actualHash"
     
-    # Note: Uncomment the following lines once you have the actual checksum from HPE
-    # if ($actualHash -ne $expectedHash) {
-    #     Write-Error "❌ CHECKSUM VERIFICATION FAILED!"
-    #     Write-Error "Expected: $expectedHash"
-    #     Write-Error "Got: $actualHash"
-    #     Write-Error "File may be corrupted or compromised. Deleting downloaded file."
-    #     Remove-Item $outFile -Force
-    #     exit 1
-    # }
-    
-    # Write-Host "✅ Checksum verification passed"
-    Write-Warning "SECURITY WARNING: Checksum verification is currently disabled."
-    Write-Warning "Please obtain the official SHA256 hash from HPE and update the script."
-    Write-Warning "Current hash: $actualHash"
+    # Verify checksum if expected hash is provided
+    if (-not [string]::IsNullOrWhiteSpace($expectedHash)) {
+        if ($actualHash -ne $expectedHash) {
+            Write-Error "❌ CHECKSUM VERIFICATION FAILED!"
+            Write-Error "Expected: $expectedHash"
+            Write-Error "Got: $actualHash"
+            Write-Error "File may be corrupted or compromised. Deleting downloaded file."
+            Remove-Item $outFile -Force
+            exit 1
+        }
+        Write-Host "✅ Checksum verification passed"
+    } else {
+        Write-Warning "⚠️  SECURITY WARNING: Checksum verification is DISABLED"
+        Write-Warning "    For production use, obtain the official SHA256 hash from HPE at:"
+        Write-Warning "    https://support.hpe.com/"
+        Write-Warning "    Current file hash: $actualHash"
+        Write-Warning "    Add this hash to `$expectedHash variable to enable verification"
+    }
     
 } catch {
     Write-Error "Failed to download or verify driver: $_"
