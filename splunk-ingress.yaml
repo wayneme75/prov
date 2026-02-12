@@ -59,6 +59,19 @@ spec:
     app: web-app
 ---
 # Splunk Federation Ingress
+# 
+# Rate Limiting Configuration Guidelines:
+# - limit-rps: Maximum requests per second per IP address
+# - limit-burst-multiplier: Allows temporary bursts (limit-rps * multiplier)
+#
+# Recommended values based on use case:
+# - Low volume (< 50 logs/sec):     limit-rps: "50",  burst: "3"
+# - Medium volume (50-200 logs/sec): limit-rps: "200", burst: "5" (current)
+# - High volume (> 200 logs/sec):    limit-rps: "500", burst: "10"
+#
+# Calculate your needs: (peak logs/sec) * (safety factor 1.5-2.0) = limit-rps
+# Monitor nginx-ingress metrics to adjust values based on actual traffic patterns
+#
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -67,6 +80,14 @@ metadata:
   annotations:
     nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
     nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+    # Security: Limit request sizes to prevent DoS
+    nginx.ingress.kubernetes.io/proxy-body-size: "10m"
+    # Security: Add rate limiting with burst capacity for log traffic spikes
+    # Adjust these values based on your expected traffic patterns
+    nginx.ingress.kubernetes.io/limit-rps: "200"
+    nginx.ingress.kubernetes.io/limit-burst-multiplier: "5"
+    # Security: Enable HSTS
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
 spec:
   ingressClassName: nginx
   rules:
@@ -81,12 +102,41 @@ spec:
             port:
               number: 8089
 ---
-# Web App 
+# Web App Ingress
+#
+# Rate Limiting Configuration Guidelines:
+# - limit-rps: Maximum requests per second per IP address
+# - limit-burst-multiplier: Allows temporary bursts during page loads
+#
+# Recommended values based on concurrent users:
+# - Small (< 50 users):    limit-rps: "100", burst: "5"
+# - Medium (50-200 users): limit-rps: "200", burst: "5" (current)
+# - Large (> 200 users):   limit-rps: "500", burst: "10"
+#
+# Consider: Average page = 10-20 requests, user may open multiple tabs
+# Calculate: (concurrent users * 20 requests) / (page load time in seconds) = baseline
+# Add 50-100% safety margin for peaks
+#
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: web-ingress
   namespace: splunk
+  annotations:
+    # Security: Limit request sizes to prevent DoS
+    nginx.ingress.kubernetes.io/proxy-body-size: "10m"
+    # Security: Add rate limiting with burst capacity for peak web traffic
+    # Adjust these values based on expected user load and usage patterns
+    nginx.ingress.kubernetes.io/limit-rps: "200"
+    nginx.ingress.kubernetes.io/limit-burst-multiplier: "5"
+    # Security: Enable HSTS for HTTPS
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    # Security: Set security headers
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      more_set_headers "X-Frame-Options: DENY";
+      more_set_headers "X-Content-Type-Options: nosniff";
+      more_set_headers "Referrer-Policy: strict-origin-when-cross-origin";
+      more_set_headers "Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'";
 spec:
   ingressClassName: nginx
   rules:
