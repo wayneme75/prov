@@ -157,7 +157,7 @@ else
     fi
     
     read -p "    Continue without checksum verification? (yes/no): " -r
-    if [[ ! $REPLY =~ ^[Yy][Ee][Ss]$ ]]; then
+    if [[ ! $REPLY =~ ^([Yy][Ee][Ss]|[Yy])$ ]]; then
         echo "Installation cancelled."
         rm -rf "$TEMP_DIR"
         exit 1

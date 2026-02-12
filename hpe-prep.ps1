@@ -73,7 +73,7 @@ try {
         }
         
         $response = Read-Host "    Continue without checksum verification? (yes/no)"
-        if ($response -ne "yes") {
+        if ($response -notmatch '^(yes|y)$') {
             Write-Host "Download cancelled."
             Remove-Item $outFile -Force -ErrorAction SilentlyContinue
             exit 1
